@@ -6,7 +6,8 @@ terraform {
     }
   }
 }
-
+# Configure the AWS Provider
 provider "aws" {
   # Configuration options
+  region = var.location
 }
