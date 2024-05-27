@@ -1,44 +1,19 @@
 #cloud-config
-# Add groups to the system
-# Adds the ubuntu group with members 'root' and 'sys'
-# and the empty group hashicorp.
-groups:
-  - hashicorp
-
-# Add users to the system. Users are added after groups are added.
-users:
-  - default
-  - name: terraform
-    gecos: terraform
-    shell: /bin/bash
-    primary_group: hashicorp
-    sudo: ALL=(ALL) NOPASSWD:ALL
-    groups: users, admin
-    lock_passwd: false
-    ssh_authorized_keys:
-      - ssh-rsa AAAAHHHHHH
-
-# Downloads the golang package
 packages:
-  - golang
+  - gnupg
+  - curl
+  - wget
 
-write_files:
-  - path: /etc/yum.repos.d/mongodb-org-7.0.repo
-    content: |
-      [mongodb-org-7.0]
-      name=MongoDB Repository
-      baseurl=https://repo.mongodb.org/yum/amazon/2/mongodb-org/7.0/x86_64/
-      gpgcheck=1
-      enabled=1
-      gpgkey=https://pgp.mongodb.com/server-7.0.asc
-    owner: 'root:root'
-    permissions: '0644'
-
-
-
-# Sets the GOPATH & downloads the demo payload
+yum_repos:
+  mongodb:
+    baseurl: 'https://repo.mongodb.org/yum/amazon/2/mongodb-org/6.0/x86_64/'
+    enabled: true
+    failovermethod: priority
+    gpgcheck: true
+    gpgkey: 'https://pgp.mongodb.com/server-6.0.asc'
+    name: MongoDB Repository
 runcmd:
-  - sudo yum install -y mongodb-org
-  - echo "exclude=mongodb-org,mongodb-org-database,mongodb-org-server,mongodb-mongosh,mongodb-org-mongos,mongodb-org-tools" >> /etc/yum.conf
+  - sudo yum install -y mongodb-org-6.0.15 mongodb-org-database-6.0.15 mongodb-org-server-6.0.15 mongodb-org-mongos-6.0.15 mongodb-org-tools-6.0.15
+  - echo "exclude=mongodb-org,mongodb-org-database,mongodb-org-server,mongodb-mongosh,mongodb-org-mongos,mongodb-org-tools" | sudo tee -a /etc/yum.conf
   - sudo systemctl start mongod
   - sudo systemctl enable mongod

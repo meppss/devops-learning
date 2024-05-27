@@ -19,7 +19,7 @@ resource "aws_subnet" "k8s-demo-subnet" {
   map_public_ip_on_launch = true
 
   tags = merge(var.tags, {
-    "Name"                                      = "k8s-demo-subnet"
+    "Name"                                      = "k8s-demo-subnet-${count.index}"
     "kubernetes.io/cluster/${var.cluster_name}" = "shared"
     "kubernetes.io/role/elb"                    = 1
   })
@@ -48,40 +48,3 @@ resource "aws_route_table_association" "k8s-demo-rtb_association" {
   subnet_id      = aws_subnet.k8s-demo-subnet[count.index].id
   route_table_id = aws_route_table.k8s-demo-rtb.id
 }
-
-resource "aws_security_group" "k8s-demo-sg" {
-    name = "k8s-demo-sg"
-    vpc_id = aws_vpc.k8s-demo-vpc.id
-
-    tags = merge(var.tags, {
-        Name = "k8s-demo-sg"
-    })    
-    # SSH access from the VPC
-    ingress {
-        from_port   = 22
-        to_port     = 22
-        protocol    = "tcp"
-        cidr_blocks = ["0.0.0.0/0"]
-        }
-
-    ingress {
-        from_port   = 80
-        to_port     = 80
-        protocol    = "tcp"
-        cidr_blocks = ["0.0.0.0/0"]
-        }
-
-    ingress {
-        from_port   = 8080
-        to_port     = 8080
-        protocol    = "tcp"
-        cidr_blocks = ["0.0.0.0/0"]
-        }
-
-    egress {
-        from_port   = 0
-        to_port     = 0
-        protocol    = "-1"
-        cidr_blocks = ["0.0.0.0/0"]
-        }
-    }
