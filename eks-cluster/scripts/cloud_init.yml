@@ -1,0 +1,29 @@
+#cloud-config
+package_update: true
+package_upgrade: false
+
+packages:
+  - gnupg
+  - curl
+  - wget  
+
+write_files:
+  - /opt/test.txt
+  owner: root:root
+  permissions: "0644"
+  content: "This is the test file which was created by cloud_init."
+
+runcmd:
+  - curl -fsSL https://www.mongodb.org/static/pgp/server-6.0.asc | sudo gpg -o /usr/share/keyrings/mongodb-server-6.0.gpg --dearmor
+  - sudo touch /etc/apt/sources.list.d/mongodb-org-6.0.list
+  - echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-6.0.gpg ] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/6.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-6.0.list
+  - sudo apt-get update
+  - sudo apt-get install -y mongodb-org=6.0.15 mongodb-org-database=6.0.15 mongodb-org-server=6.0.15 mongodb-org-mongos=6.0.15 mongodb-org-tools=6.0.15
+  - echo "mongodb-org hold" | sudo dpkg --set-selections
+  - echo "mongodb-org-database hold" | sudo dpkg --set-selections
+  - echo "mongodb-org-server hold" | sudo dpkg --set-selections
+  - echo "mongodb-mongosh hold" | sudo dpkg --set-selections
+  - echo "mongodb-org-mongos hold" | sudo dpkg --set-selections
+  - echo "mongodb-org-tools hold" | sudo dpkg --set-selections
+  - sudo systemctl start mongod
+  - sudo systemctl enable mongod
