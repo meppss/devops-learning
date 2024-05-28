@@ -31,7 +31,7 @@ provider "kubernetes" {
   config_context = "my-context"
 
   host                   = aws_eks_cluster.k8s-demo-eks-cluster.endpoint
-  token                  = data.aws_eks_cluster_auth.eks-cluster-auth.token
+  token                  = data.aws_eks_cluster_auth.eks_cluster_auth.token
   cluster_ca_certificate = base64decode(aws_eks_cluster.k8s-demo-eks-cluster.certificate_authority.0.data)
 }
 provider "tls" {}

@@ -6,6 +6,10 @@ data "template_file" "user_data" {
   template = file("${path.module}/scripts/cloud_init.cfg")
 }
 
+data "aws_eks_cluster_auth" "eks_cluster_auth" {
+  name = aws_eks_cluster.k8s-demo-eks-cluster.name
+}
+
 data "aws_iam_policy_document" "allow_access_from_public_readonly" {
   statement {
     principals {
