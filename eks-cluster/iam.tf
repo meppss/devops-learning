@@ -98,3 +98,14 @@ resource "aws_iam_role_policy_attachment" "mongodb_role_policy_attachment-2" {
   policy_arn = "arn:aws:iam::aws:policy/job-function/DataScientist"
   role = aws_iam_role.mongodb_iam_role.name
 }
+
+resource "aws_iam_user" "mongodb_backup_iam" {
+  name = "mongdb_backup_iam"
+  force_destroy = true
+  tags = var.tags
+}
+
+resource "aws_iam_user_policy_attachment" "mongodb_backup_iam_policy" {
+  policy_arn = "arn:aws:iam::aws:policy/AmazonS3FullAccess"
+  user = aws_iam_user.mongodb_backup_iam.name
+}
