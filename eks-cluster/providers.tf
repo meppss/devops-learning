@@ -12,6 +12,10 @@ terraform {
       source = "hashicorp/local"
       version = "2.5.1"
     }
+    template = {
+      source = "hashicorp/template"
+      version = "2.2.0"
+    }
   }
 }
 
@@ -20,3 +24,4 @@ provider "aws" {
 }
 provider "tls" {}
 provider "local" {}
+provider "template" {}
