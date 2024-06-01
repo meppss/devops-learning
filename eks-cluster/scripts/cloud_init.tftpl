@@ -1,0 +1,71 @@
+#cloud-config
+package_update: true
+package_upgrade: false
+
+users:
+  - default
+
+packages:
+  - gnupg
+  - curl
+  - wget
+
+write_files:
+  - path: /opt/mongo_backup.sh
+    owner: 'root:root'
+    permissions: '0755'
+    content: |
+      #!/bin/bash
+
+      # MongoDB connection details
+      MONGO_HOST="${MONGODB_SRV_IP}"
+      MONGO_PORT="27017"
+      MONGO_USER="${MONGODB_USER}"
+      MONGO_PASS="${MONGODB_PASS}"
+      MONGO_DB="${MONGO_DB}"
+
+      # AWS S3 details
+      S3_BUCKET_NAME="${S3_NAME}"
+      S3_BUCKET_PATH="${S3_PATH}mongodb-backups"
+
+      # Backup details
+      BACKUP_PATH="/tmp/mongo_backups"  # Local directory to store backups
+      DATE="$(date +"%Y-%m-%d_%H-%M-%S")"
+      BACKUP_NAME="${MONGO_DB}_backup_'$DATE'.gz"
+
+      # Create backup directory if it doesn't exist
+      mkdir -p '$BACKUP_PATH'
+
+      # Dump the MongoDB database
+      mongodump --host $MONGO_HOST --port $MONGO_PORT --username $MONGO_USER --password $MONGO_PASS --db $MONGO_DB --out '$BACKUP_PATH'/'$DATE'
+
+      # Compress the backup
+      tar -czvf '$BACKUP_PATH'/'$BACKUP_NAME' -C '$BACKUP_PATH' '$DATE'
+
+      # Upload the backup to S3
+      aws s3 cp '$BACKUP_PATH'/'$BACKUP_NAME' s3://'$S3_BUCKET_NAME'/'$S3_BUCKET_PATH'/'$BACKUP_NAME'
+
+      # Remove local backup files
+      rm -rf '$BACKUP_PATH'/'$DATE'
+      rm '$BACKUP_PATH'/'$BACKUP_NAME'
+
+      # Print completion message
+      echo "Backup and upload to S3 completed successfully!"
+
+runcmd:
+  - 'curl -fsSL https://www.mongodb.org/static/pgp/server-6.0.asc | sudo gpg -o /usr/share/keyrings/mongodb-server-6.0.gpg --dearmor'
+  - 'sudo touch /etc/apt/sources.list.d/mongodb-org-6.0.list'
+  - 'echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-6.0.gpg ] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/6.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-6.0.list'
+  - 'sudo apt-get update'
+  - 'sudo apt-get install -y mongodb-org=6.0.11 mongodb-org-database=6.0.11 mongodb-org-server=6.0.11 mongodb-org-mongos=6.0.11 mongodb-org-tools=6.0.11'
+  - 'echo "mongodb-org hold" | sudo dpkg --set-selections'
+  - 'echo "mongodb-org-database hold" | sudo dpkg --set-selections'
+  - 'echo "mongodb-org-server hold" | sudo dpkg --set-selections'
+  - 'echo "mongodb-mongosh hold" | sudo dpkg --set-selections'
+  - 'echo "mongodb-org-mongos hold" | sudo dpkg --set-selections'
+  - 'echo "mongodb-org-tools hold" | sudo dpkg --set-selections'
+  - 'sudo systemctl start mongod'
+  - 'sudo systemctl enable mongod'
+  - 'sudo touch /opt/cron_mongo.txt && sudo touch /var/log/mongodb_backup.log'
+  - 'echo "0 2 * * * /opt/mongodb_backup.sh >> /var/log/mongodb_backup.log 2>&1" >> /opt/cron_mongo.txt'
+  - 'crontab -l | cat - /opt/cron_mongo.txt > crontab.txt && crontab crontab.txt'
