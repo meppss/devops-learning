@@ -12,6 +12,6 @@ resource "tls_private_key" "ubuntu_ssh_key" {
 
 resource "local_sensitive_file" "ubuntu_key" {
     content = tls_private_key.ubuntu_ssh_key.private_key_pem
-    filename = "ssh/ubuntu.pem"
+    filename = "ubuntu.pem"
     file_permission = "0600"  
 }
