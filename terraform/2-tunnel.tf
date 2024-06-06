@@ -66,14 +66,14 @@ resource "azurerm_virtual_network_gateway_connection" "az-hub-onprem" {
   connection_protocol             = var.gateway_connection_protocol
 
   ipsec_policy {
-      dh_group         = var.local_networks_ipsec_policy.dh_group
-      ike_encryption   = var.local_networks_ipsec_policy.ike_encryption
-      ike_integrity    = var.local_networks_ipsec_policy.ike_integrity
-      ipsec_encryption = var.local_networks_ipsec_policy.ipsec_encryption
-      ipsec_integrity  = var.local_networks_ipsec_policy.ipsec_integrity
-      pfs_group        = var.local_networks_ipsec_policy.pfs_group
-      sa_datasize      = var.local_networks_ipsec_policy.sa_datasize
-      sa_lifetime      = var.local_networks_ipsec_policy.sa_lifetime
+      dh_group         = var.peer_networks_ipsec_policy.dh_group
+      ike_encryption   = var.peer_networks_ipsec_policy.ike_encryption
+      ike_integrity    = var.peer_networks_ipsec_policy.ike_integrity
+      ipsec_encryption = var.peer_networks_ipsec_policy.ipsec_encryption
+      ipsec_integrity  = var.peer_networks_ipsec_policy.ipsec_integrity
+      pfs_group        = var.peer_networks_ipsec_policy.pfs_group
+      sa_datasize      = var.peer_networks_ipsec_policy.sa_datasize
+      sa_lifetime      = var.peer_networks_ipsec_policy.sa_lifetime
   }
   tags = local.common_tags
 }
