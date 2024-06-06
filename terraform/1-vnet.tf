@@ -46,7 +46,7 @@ resource "azurerm_nat_gateway_public_ip_association" "natgw_pip_assoc" {
 # Associate Subnets to NAT GW
 resource "azurerm_subnet_nat_gateway_association" "natgw_snet_assoc" {
   for_each = {
-    "prisma-snet"      = "${azurerm_subnet.subnet.id}"
+    "vm-snet"      = "${azurerm_subnet.vm_subnet.id}"
   }
   subnet_id      = each.value
   nat_gateway_id = azurerm_nat_gateway.natgw.id
