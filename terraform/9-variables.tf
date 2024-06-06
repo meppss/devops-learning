@@ -19,11 +19,6 @@ variable "environment" {
 }
 
 ######NETWORK#######
-variable "vnet_name" {
-  type        = string
-  description = "Virtual Network Name"
-}
-
 variable "network_address_space" {
   type        = list(string)
   description = "Virtual Network Address Space"
@@ -96,21 +91,10 @@ variable "bgp_peer_weight" {
 variable "peer_network" {
   type = object({gw_name = string, gateway_address = string, address_space = list(string), shared_key = string})
   description = "List of peer virtual network connections to connect to gateway"
-  default = {
-    "gw_name" = " "
-    "gateway_address" = " "
-    "address_space" = [" "]
-    "shared_key" = " "
-  }
 }
 variable "peer_bgp_settings" {
   type = object({asn_number = number, peering_address = string, peer_weight = list(string)})
   description = "List of peer virtual network connections to connect to gateway"
-  default = {
-    "asn_number" = 123
-    "peering_address" = ""
-    "peer_weight" = [""]
-  }
 }
 variable "peer_networks_ipsec_policy" {
   type = object({ike_encryption = string, ike_integrity = string, dh_group = string, ipsec_encryption = string, ipsec_integrity = string, pfs_group = string, sa_datasize = number, sa_lifetime = number})
