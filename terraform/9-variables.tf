@@ -4,7 +4,7 @@ variable "location" {
   default     = "eastus"
 }
 variable "email" {
-  description = "Please enter your extrahop email address here (Use output of `az ad signed-in-user show | jq .mail`)"
+  description = "Please enter your email address here (Use output of `az ad signed-in-user show | jq .mail`)"
   type        = string
 }
 variable "tags" {
@@ -94,20 +94,38 @@ variable "bgp_peer_weight" {
   description = "The weight added to routes which have been learned through BGP peering. Valid values can be between 0 and 100"
 }
 variable "peer_network" {
-  type = object({peer_gw_name = string, peer_gateway_address = string, peer_address_space = list(string), shared_key = string})
+  type = object({gw_name = string, gateway_address = string, address_space = list(string), shared_key = string})
   description = "List of peer virtual network connections to connect to gateway"
-  default = []
+  default = {
+    "gw_name" = " "
+    "gateway_address" = " "
+    "address_space" = [" "]
+    "shared_key" = " "
+  }
 }
 variable "peer_bgp_settings" {
   type = object({asn_number = number, peering_address = string, peer_weight = list(string)})
   description = "List of peer virtual network connections to connect to gateway"
-  default = []
+  default = {
+    "asn_number" = 123
+    "peering_address" = ""
+    "peer_weight" = [""]
+  }
 }
 variable "peer_networks_ipsec_policy" {
   type = object({ike_encryption = string, ike_integrity = string, dh_group = string, ipsec_encryption = string, ipsec_integrity = string, pfs_group = string, sa_datasize = number, sa_lifetime = number})
   description = "IPSec policy for local networks. Only a single policy can be defined for a connection."
-  default     = []
-}
+  default     = {
+    "ike_encryption" = "AES256"
+    "ike_integrity" = "SHA256"
+    "dh_group" = "DH2"
+    "ipsec_encryption" = ""
+    "ipsec_integrity" = ""
+    "pfs_group" = ""
+    "sa_datasize" = null
+    "sa_lifetime" = null
+  }
+  }
 variable "gateway_connection_type" {
   description = "The type of connection. Valid options are IPsec (Site-to-Site), ExpressRoute (ExpressRoute), and Vnet2Vnet (VNet-to-VNet)"
   default     = "IPsec"
@@ -146,9 +164,21 @@ variable "sg_rules" {
   default = [
   {
     name                           = "ingress_traffic"
-    description                    = "Allow all Lab Ingress Traffic"
+    description                    = "Allow all internal Ingress Traffic"
     protocol                       = "*"
     source_address_prefixes         = ["10.101.0.0/16"]
+    source_port_range              = "*"
+    destination_address_prefix      = "10.101.0.0/16"
+    destination_port_range         = "*"
+    access                         = "Allow"
+    priority                       = "131"
+    direction                      = "Inbound"
+  },
+    {
+    name                           = "vpn_ingress_traffic"
+    description                    = "Allow all VPN Ingress Traffic"
+    protocol                       = "*"
+    source_address_prefixes         = ["10.0.1.0/24"]
     source_port_range              = "*"
     destination_address_prefix      = "10.101.0.0/16"
     destination_port_range         = "*"

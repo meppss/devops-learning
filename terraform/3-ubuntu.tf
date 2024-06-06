@@ -1,12 +1,12 @@
 resource "azurerm_network_interface" "ubuntu_nic" {
   count               = var.number_of_ubuntu
-  depends_on          = [azurerm_subnet.subnet.id]
+  depends_on          = [azurerm_subnet.vm_subnet]
   name                = "ubuntu-nic-${count.index}"
   location            = var.location
   resource_group_name = azurerm_resource_group.sc_rg.name
   ip_configuration {
     name                          = "ubuntu-ipconfig-${count.index}"
-    subnet_id                     = azurerm_subnet.subnet.id
+    subnet_id                     = azurerm_subnet.vm_subnet.id
     private_ip_address_allocation = "Dynamic"
   }
 }
