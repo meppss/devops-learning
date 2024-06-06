@@ -93,7 +93,7 @@ variable "peer_network" {
   description = "List of peer virtual network connections to connect to gateway"
 }
 variable "peer_bgp_settings" {
-  type = object({asn_number = number, peering_address = string, peer_weight = list(string)})
+  type = object({asn_number = number, peering_address = string, peer_weight = number})
   description = "List of peer virtual network connections to connect to gateway"
 }
 variable "peer_networks_ipsec_policy" {

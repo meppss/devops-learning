@@ -1,3 +1,5 @@
+vm_size = "Standard_A4_v2"
+
 enable_bgp = true
 bgp_asn_number = 65515
 bgp_peering_address = "169.129.107.58"
@@ -13,10 +15,10 @@ peer_network = {
 peer_bgp_settings = {
     "asn_number" = 65510
     "peering_address" = "169.129.107.55"
-    "peer_weight" = ["1"]
+    "peer_weight" = 1
 }
 
-  peer_networks_ipsec_policy = {
+peer_networks_ipsec_policy = {
     "ike_encryption" = "AES256"
     "ike_integrity" = "SHA256"
     "dh_group" = "DH2"
