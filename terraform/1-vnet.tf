@@ -7,12 +7,20 @@ resource "azurerm_virtual_network" "vnet" {
   tags                    = var.tags
 }
 
-#Define gateway subnet resource
+#Define vm subnet resource
 resource "azurerm_subnet" "vm_subnet" {
   name                                             = "${var.environment}-vm-snet"
   resource_group_name                              = azurerm_resource_group.sc_rg.name
   virtual_network_name                             = azurerm_virtual_network.vnet.name
   address_prefixes                                 = var.subnet_prefix
+}
+
+#Define gateway subnet resource
+resource "azurerm_subnet" "transport_subnet" {
+  name                                             = "GatewaySubnet"
+  resource_group_name                              = azurerm_resource_group.sc_rg.name
+  virtual_network_name                             = azurerm_virtual_network.vnet.name
+  address_prefixes                                 = var.transport_subnet_prefix
 }
 
 # Define a Public IP for the NAT gateway
@@ -46,6 +54,7 @@ resource "azurerm_nat_gateway_public_ip_association" "natgw_pip_assoc" {
 # Associate Subnets to NAT GW
 resource "azurerm_subnet_nat_gateway_association" "natgw_snet_assoc" {
   for_each = {
+    # Add any additional subnets here for association to the NAT GW
     "vm-snet"      = "${azurerm_subnet.vm_subnet.id}"
   }
   subnet_id      = each.value
@@ -55,6 +64,11 @@ resource "azurerm_subnet_nat_gateway_association" "natgw_snet_assoc" {
 # NSG Association Resources
 resource "azurerm_subnet_network_security_group_association" "vm-sga" {
   subnet_id                 = azurerm_subnet.vm_subnet.id
+  network_security_group_id = azurerm_network_security_group.nsg.id
+}
+
+resource "azurerm_subnet_network_security_group_association" "transport-sga" {
+  subnet_id                 = azurerm_subnet.transport_subnet.id
   network_security_group_id = azurerm_network_security_group.nsg.id
 }
 

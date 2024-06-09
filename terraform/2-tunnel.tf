@@ -25,7 +25,7 @@ resource "azurerm_virtual_network_gateway" "prisma_sc_vpng" {
     name                          = "vnetGatewayConfig"
     public_ip_address_id          = azurerm_public_ip.pip_gw.id
     private_ip_address_allocation = "Dynamic"
-    subnet_id                     = azurerm_subnet.vm_subnet.id
+    subnet_id                     = azurerm_subnet.transport_subnet.id
   }
   tags = local.common_tags
 }
@@ -55,7 +55,7 @@ resource "azurerm_local_network_gateway" "localgw" {
 #---------------------------------------
 resource "azurerm_virtual_network_gateway_connection" "az-hub-onprem" {
   name                            = "${var.environment}-vngconnect"
-    resource_group_name           = azurerm_resource_group.sc_rg.name
+  resource_group_name             = azurerm_resource_group.sc_rg.name
   location                        = var.location
   type                            = var.gateway_connection_type
   virtual_network_gateway_id      = azurerm_virtual_network_gateway.prisma_sc_vpng.id
