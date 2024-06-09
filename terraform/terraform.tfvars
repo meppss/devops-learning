@@ -19,12 +19,12 @@ peer_bgp_settings = {
 }
 
 peer_networks_ipsec_policy = {
-    "ike_encryption" = "AES256"
-    "ike_integrity" = "SHA256"
-    "dh_group" = "DH2"
-    "ipsec_encryption" = ""
-    "ipsec_integrity" = ""
-    "pfs_group" = ""
-    "sa_datasize" = 123
-    "sa_lifetime" = 123
+    "ike_encryption"    = "AES256"
+    "ike_integrity"     = "SHA256"
+    "dh_group"          = "DHGroup2"
+    "ipsec_encryption"  = "AES256"
+    "ipsec_integrity"   = "SHA256"
+    "pfs_group"         = "PFS2"
+    "sa_datasize"       = 102400000
+    "sa_lifetime"       = 3600
   }
