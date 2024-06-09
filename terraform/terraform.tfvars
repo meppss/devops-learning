@@ -1,4 +1,4 @@
-vm_size = "Standard_A4_v2"
+vm_size = "Standard_B2s_v2"
 
 enable_bgp = true
 bgp_asn_number = 65515

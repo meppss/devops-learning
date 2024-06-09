@@ -100,14 +100,14 @@ variable "peer_networks_ipsec_policy" {
   type = object({ike_encryption = string, ike_integrity = string, dh_group = string, ipsec_encryption = string, ipsec_integrity = string, pfs_group = string, sa_datasize = number, sa_lifetime = number})
   description = "IPSec policy for local networks. Only a single policy can be defined for a connection."
   default     = {
-    "ike_encryption" = "AES256"
-    "ike_integrity" = "SHA256"
-    "dh_group" = "DH2"
-    "ipsec_encryption" = ""
-    "ipsec_integrity" = ""
-    "pfs_group" = ""
-    "sa_datasize" = null
-    "sa_lifetime" = null
+    "ike_encryption"    = "AES256"
+    "ike_integrity"     = "SHA256"
+    "dh_group"          = "DHGroup2"
+    "ipsec_encryption"  = "AES256"
+    "ipsec_integrity"   = "SHA256"
+    "pfs_group"         = "PFS2"
+    "sa_datasize"       = 102400000
+    "sa_lifetime"       = 3600
   }
   }
 variable "gateway_connection_type" {
