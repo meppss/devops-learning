@@ -26,14 +26,14 @@ variable "network_address_space" {
 }
 
 variable "subnet_prefix" {
-  type        = list(any)
-  description = "DMZ Subnet Address Prefix"
-  default = [ "10.101.1.0/24" ]
+  type        = list(string)
+  description = "Please enter the subnet prefix for use by the VM Subnet. Use proper CIDR format (e.g. 10.101.1.0/24)."
+  default = [ "10.101.0.1/24" ]
 }
-variable "transport_subnet_address_space" {
+variable "transport_subnet_prefix" {
     description = "All subnets"
     type        = list(string)
-    default     = ["10.0.3.0/24"]
+    default     = ["10.101.0.0/24"]
 }
 ######COMPUTE###############
 variable "vm_size" {
@@ -162,12 +162,12 @@ variable "sg_rules" {
     name                           = "vpn_ingress_traffic"
     description                    = "Allow all VPN Ingress Traffic"
     protocol                       = "*"
-    source_address_prefixes         = ["10.0.1.0/24"]
+    source_address_prefixes         = ["10.0.1.0/24"] # Add appropriate vpn ingress traffic here. 
     source_port_range              = "*"
     destination_address_prefix      = "10.101.0.0/16"
     destination_port_range         = "*"
     access                         = "Allow"
-    priority                       = "131"
+    priority                       = "132"
     direction                      = "Inbound"
   }
   ]
