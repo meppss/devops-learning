@@ -21,11 +21,11 @@ resource "azurerm_virtual_network_gateway" "prisma_sc_vpng" {
       asn             = var.bgp_asn_number
       peer_weight     = var.bgp_peer_weight
   }
-  ip_configuration {
-    name                          = "vnetGatewayConfig"
-    public_ip_address_id          = azurerm_public_ip.pip_gw.id
-    private_ip_address_allocation = "Dynamic"
-    subnet_id                     = azurerm_subnet.transport_subnet.id
+    ip_configuration {
+      name                          = "vnetGatewayConfig"
+      public_ip_address_id          = azurerm_public_ip.pip_gw.id
+      private_ip_address_allocation = "Dynamic"
+      subnet_id                     = azurerm_subnet.transport_subnet.id
   }
   tags = local.common_tags
 }
