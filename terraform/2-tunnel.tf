@@ -16,7 +16,7 @@ resource "azurerm_virtual_network_gateway" "prisma_sc_vpng" {
     type                    = "Vpn" 
     vpn_type                = "RouteBased" 
     enable_bgp              = var.enable_bgp
-    sku                     = "Basic"
+    sku                     = "Standard"
     bgp_settings {
       asn             = var.bgp_asn_number
       peer_weight     = var.bgp_peer_weight
