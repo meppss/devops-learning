@@ -67,11 +67,6 @@ resource "azurerm_subnet_network_security_group_association" "vm-sga" {
   network_security_group_id = azurerm_network_security_group.nsg.id
 }
 
-resource "azurerm_subnet_network_security_group_association" "transport-sga" {
-  subnet_id                 = azurerm_subnet.transport_subnet.id
-  network_security_group_id = azurerm_network_security_group.nsg.id
-}
-
 #NSG Resources
 resource "azurerm_network_security_group" "nsg" {
   name = "${var.environment}-sg"
