@@ -28,7 +28,7 @@ variable "network_address_space" {
 variable "subnet_prefix" {
   type        = list(string)
   description = "Please enter the subnet prefix for use by the VM Subnet. Use proper CIDR format (e.g. 10.101.1.0/24)."
-  default = [ "10.101.0.1/24" ]
+  default = [ "10.101.1.0/24" ]
 }
 variable "transport_subnet_prefix" {
     description = "All subnets"
