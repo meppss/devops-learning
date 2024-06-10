@@ -16,7 +16,7 @@ resource "azurerm_virtual_network_gateway" "prisma_sc_vpng" {
     type                    = "Vpn" 
     vpn_type                = "RouteBased" 
     enable_bgp              = var.enable_bgp
-    sku                     = "Standard"
+    sku                     = "VpnGw1"
     bgp_settings {
       asn             = var.bgp_asn_number
       peer_weight     = var.bgp_peer_weight
@@ -37,8 +37,8 @@ resource "azurerm_local_network_gateway" "localgw" {
     name                    = "${var.environment}-localgw"
     resource_group_name     = azurerm_resource_group.sc_rg.name
     location                = var.location
-    gateway_address         = var.peer_network.gateway_address
-    address_space           = var.peer_network.address_space
+    gateway_address         = var.peer_network_gateway_address
+    address_space           = var.peer_network_address_space
 
   bgp_settings {
       asn                 = var.peer_bgp_settings.asn_number
