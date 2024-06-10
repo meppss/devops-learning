@@ -78,7 +78,7 @@ variable "enable_bgp" {
 }
 
 variable "bgp_asn_number" {
-  description = "The Autonomous System Number (ASN) to use as part of the BGP"
+  description = "The Autonomous System Number (ASN) to use as part of the BGP. This value is for the Azure Virtual Network Gateway."
 }
 
 variable "bgp_peering_address" {
@@ -86,16 +86,39 @@ variable "bgp_peering_address" {
 }
 
 variable "bgp_peer_weight" {
-  description = "The weight added to routes which have been learned through BGP peering. Valid values can be between 0 and 100"
+  description = "The weight added to routes which have been learned through BGP peering. Valid values can be between 0 and 100. This value is for the Azure Virtual Network Gateway."
 }
-variable "peer_network" {
-  type = object({gw_name = string, gateway_address = string, address_space = list(string), shared_key = string})
-  description = "List of peer virtual network connections to connect to gateway"
+
+variable "peer_network_gateway_name" {
+  type = string
+  description = "Enter the name for the Peer Gateway."
 }
-variable "peer_bgp_settings" {
-  type = object({asn_number = number, peering_address = string, peer_weight = number})
-  description = "List of peer virtual network connections to connect to gateway"
+
+variable "peer_network_gateway_address" {
+  type = string
+  description = "Enter the IP Address for the Peer Gateway."
 }
+
+variable "peer_network_address_space" {
+  type = list(string)
+  description = "Enter the CIDR for the Peer Gateway."
+}
+
+variable "peer_bgp_settings_asn_number" {
+  type = string
+  description = "Enter the ASN of the Peer Gateway. This can be found in Prisma."
+}
+
+variable "peer_bgp_settings_peering_address" {
+  type = string
+  description = "Enter the IP Address of the Peer Gateway. This can be found in Prisma."
+}
+
+variable "peer_bgp_settings_peer_weight" {
+  type = string
+  description = "Enter the BGP Weight of the Peer Gateway. This can be found in Prisma."
+}
+
 variable "peer_networks_ipsec_policy" {
   type = object({ike_encryption = string, ike_integrity = string, dh_group = string, ipsec_encryption = string, ipsec_integrity = string, pfs_group = string, sa_datasize = number, sa_lifetime = number})
   description = "IPSec policy for local networks. Only a single policy can be defined for a connection."
