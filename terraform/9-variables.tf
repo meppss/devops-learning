@@ -62,13 +62,6 @@ variable "vpn_connection" {
     default     = "local_vpn_connection"
 }
 
-#--VPN Connection
-variable "vpn_public_ip" {
-    description = "VPN Public IP"
-    type        = string
-    default     = "local_vpn_ip"
-}
-
 variable "enable_bgp" {
   type = bool
   description = "If true, BGP (Border Gateway Protocol) will be enabled for this Virtual Network Gateway. Defaults to false"
