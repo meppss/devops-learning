@@ -1,11 +1,15 @@
 location        = "eastus"
 vm_size         = "Standard_B2s_v2"
 
+###AzureBGPSettings###
 # enable_bgp = true
 bgp_asn_number = 65515
 # bgp_peering_address = "123.123.123.123"
 bgp_peer_weight = 1
 
+
+###PeerBGPSettings###
+peer_bgp_settings_asn_number = 65534
 peer_networks_ipsec_policy = {
     "ike_encryption"    = "AES256"
     "ike_integrity"     = "SHA256"
