@@ -15,3 +15,8 @@ resource "local_sensitive_file" "ubuntu_key" {
     filename = "ubuntu.pem"
     file_permission = "0600"  
 }
+
+resource "random_password" "psk_gen" {
+    length           = 18
+    special          = false
+}
