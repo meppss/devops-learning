@@ -41,9 +41,9 @@ resource "azurerm_local_network_gateway" "localgw" {
     address_space           = var.peer_network_address_space
 
   bgp_settings {
-      asn                 = var.peer_bgp_settings.asn_number
-      bgp_peering_address = var.peer_bgp_settings.peering_address
-      peer_weight         = var.peer_bgp_settings.peer_weight
+      asn                 = var.peer_bgp_settings_asn_number
+      bgp_peering_address = var.peer_bgp_settings_peering_address
+      peer_weight         = var.peer_bgp_settings_peer_weight
   }
   tags = local.common_tags
 }
@@ -62,7 +62,7 @@ resource "azurerm_virtual_network_gateway_connection" "az-hub-onprem" {
   local_network_gateway_id        = azurerm_local_network_gateway.localgw.id
   
   enable_bgp                      = true
-  shared_key                      = var.peer_network.shared_key
+  shared_key                      = random_password.psk_gen.result
   connection_protocol             = var.gateway_connection_protocol
 
   ipsec_policy {
