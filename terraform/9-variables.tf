@@ -1,7 +1,6 @@
 variable "location" {
   description = "Region where resources will be deployed."
   type        = string
-  default     = "eastus"
 }
 variable "email" {
   description = "Please enter your email address here (Use output of `az ad signed-in-user show | jq .mail`)"
@@ -22,18 +21,15 @@ variable "environment" {
 variable "network_address_space" {
   type        = list(string)
   description = "Virtual Network Address Space"
-  default = [ "10.101.0.0/16" ]
 }
 
 variable "subnet_prefix" {
   type        = list(string)
   description = "Please enter the subnet prefix for use by the VM Subnet. Use proper CIDR format (e.g. 10.101.1.0/24)."
-  default = [ "10.101.1.0/24" ]
 }
 variable "transport_subnet_prefix" {
-    description = "All subnets"
+    description = "Please enter the subnet prefix for use by the GatewaySubnet. Use proper CIDR format (e.g. 10.101.1.0/24)."
     type        = list(string)
-    default     = ["10.101.0.0/24"]
 }
 ######COMPUTE###############
 variable "vm_size" {
@@ -74,10 +70,12 @@ variable "vpn_public_ip" {
 }
 
 variable "enable_bgp" {
+  type = bool
   description = "If true, BGP (Border Gateway Protocol) will be enabled for this Virtual Network Gateway. Defaults to false"
 }
 
 variable "bgp_asn_number" {
+  type = number
   description = "The Autonomous System Number (ASN) to use as part of the BGP. This value is for the Azure Virtual Network Gateway."
 }
 
@@ -140,11 +138,40 @@ locals {
       "Environment" = var.environment
     },
   )
+
+  nsg_rules = {
+    ingress_traffic = {
+      name                           = "ingress_traffic"
+      description                    = "Allow all internal Ingress Traffic"
+      protocol                       = "*"
+      source_address_prefixes         = "${var.subnet_prefix}"
+      source_port_range              = "*"
+      destination_address_prefix      = "${var.network_address_space}"
+      destination_port_range         = "*"
+      access                         = "Allow"
+      priority                       = "131"
+      direction                      = "Inbound"
+  }
+  
+  ingress_vpn_traffic = {
+      name                           = "vpn_ingress_traffic"
+      description                    = "Allow all VPN Ingress Traffic"
+      protocol                       = "*"
+      source_address_prefixes         = ["10.0.1.0/24"] # Add appropriate vpn ingress traffic here. 
+      source_port_range              = "*"
+      destination_address_prefix      = "${var.network_address_space}"
+      destination_port_range         = "*"
+      access                         = "Allow"
+      priority                       = "132"
+      direction                      = "Inbound"
+  }
+}
+
 }
 
 
-#######Security###Group###Rules####
-variable "sg_rules" {
+#######SecurityGroupRules####
+/* variable "nsg_rules" {
   type = list(object({
     name                       = string
     description                = string
@@ -158,30 +185,5 @@ variable "sg_rules" {
     destination_address_prefix = string
   }))
   description = "The values for each SG rule."
-  default = [
-  {
-    name                           = "ingress_traffic"
-    description                    = "Allow all internal Ingress Traffic"
-    protocol                       = "*"
-    source_address_prefixes         = ["10.101.0.0/16"]
-    source_port_range              = "*"
-    destination_address_prefix      = "10.101.0.0/16"
-    destination_port_range         = "*"
-    access                         = "Allow"
-    priority                       = "131"
-    direction                      = "Inbound"
-  },
-    {
-    name                           = "vpn_ingress_traffic"
-    description                    = "Allow all VPN Ingress Traffic"
-    protocol                       = "*"
-    source_address_prefixes         = ["10.0.1.0/24"] # Add appropriate vpn ingress traffic here. 
-    source_port_range              = "*"
-    destination_address_prefix      = "10.101.0.0/16"
-    destination_port_range         = "*"
-    access                         = "Allow"
-    priority                       = "132"
-    direction                      = "Inbound"
-  }
-  ]
-}
+  default = []
+} */
