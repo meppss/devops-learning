@@ -87,13 +87,13 @@ variable "peer_network_gateway_name" {
 
 variable "peer_network_gateway_address" {
   type = string
-  description = "Enter the IP Address for the Peer Gateway."
+  description = "Enter the IP Address Azure will tunnel to. (e.g. 123.123.123.123)"
 }
 
-variable "peer_network_address_space" {
+/* variable "peer_network_address_space" {
   type = list(string)
   description = "Enter the CIDR for the Peer Gateway."
-}
+} */
 
 variable "peer_bgp_settings_asn_number" {
   type = string
