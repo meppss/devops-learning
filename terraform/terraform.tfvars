@@ -2,7 +2,7 @@ location        = "eastus"
 vm_size         = "Standard_B2s_v2"
 
 # enable_bgp = true
-# bgp_asn_number = 65515
+bgp_asn_number = 65515
 # bgp_peering_address = "123.123.123.123"
 bgp_peer_weight = 1
 
