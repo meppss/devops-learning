@@ -72,10 +72,6 @@ variable "bgp_asn_number" {
   description = "The Autonomous System Number (ASN) to use as part of the BGP. This value is for the Azure Virtual Network Gateway."
 }
 
-variable "bgp_peering_address" {
-  description = "The BGP peer IP address of the virtual network gateway. This address is needed to configure the created gateway as a BGP Peer on the on-premises VPN devices. The IP address must be part of the subnet of the Virtual Network Gateway."
-}
-
 variable "bgp_peer_weight" {
   description = "The weight added to routes which have been learned through BGP peering. Valid values can be between 0 and 100. This value is for the Azure Virtual Network Gateway."
 }
@@ -89,11 +85,6 @@ variable "peer_network_gateway_address" {
   type = string
   description = "Enter the IP Address Azure will tunnel to. (e.g. 123.123.123.123)"
 }
-
-/* variable "peer_network_address_space" {
-  type = list(string)
-  description = "Enter the CIDR for the Peer Gateway."
-} */
 
 variable "peer_bgp_settings_asn_number" {
   type = string
