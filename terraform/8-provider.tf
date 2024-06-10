@@ -9,6 +9,10 @@ terraform {
       source = "hashicorp/tls"
       version = "4.0.5"
     }
+    random = {
+      source = "hashicorp/random"
+      version = "3.6.2"
+    }
   }
 }
 provider "azurerm" {
@@ -28,3 +32,4 @@ provider "azurerm" {
 }
 
 provider "tls" {}
+provider "random" {}
