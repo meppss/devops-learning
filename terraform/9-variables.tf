@@ -76,11 +76,6 @@ variable "bgp_peer_weight" {
   description = "The weight added to routes which have been learned through BGP peering. Valid values can be between 0 and 100. This value is for the Azure Virtual Network Gateway."
 }
 
-variable "peer_network_gateway_name" {
-  type = string
-  description = "Enter the name for the Peer Gateway."
-}
-
 variable "peer_network_gateway_address" {
   type = string
   description = "Enter the IP Address Azure will tunnel to. (e.g. 123.123.123.123)"
