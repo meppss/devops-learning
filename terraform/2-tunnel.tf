@@ -1,6 +1,6 @@
 # Public IP for Virtual Network Gateway
 resource "azurerm_public_ip" "pip_gw" {
-    name                = var.vpn_public_ip
+    name                = "${var.environment}-gw-pip"
     location            = var.location
     resource_group_name = azurerm_resource_group.sc_rg.name
     allocation_method   = "Dynamic" #--Dynamic set means Azure will generate an IP for your Azure VPN Gateway
