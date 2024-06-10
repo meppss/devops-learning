@@ -38,7 +38,6 @@ resource "azurerm_local_network_gateway" "localgw" {
     resource_group_name     = azurerm_resource_group.sc_rg.name
     location                = var.location
     gateway_address         = var.peer_network_gateway_address
-    address_space           = var.peer_network_address_space
 
   bgp_settings {
       asn                 = var.peer_bgp_settings_asn_number
