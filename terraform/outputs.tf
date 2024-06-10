@@ -16,4 +16,5 @@ output "azure_vm_ip" {
 
 output "shared_key" {
   value = random_password.psk_gen.result
+  sensitive = true
 }
