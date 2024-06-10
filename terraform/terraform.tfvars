@@ -1,8 +1,9 @@
-vm_size = "Standard_B2s_v2"
+location        = "eastus"
+vm_size         = "Standard_B2s_v2"
 
 # enable_bgp = true
 # bgp_asn_number = 65515
-# bgp_peering_address = "169.129.107.58"
+# bgp_peering_address = "123.123.123.123"
 bgp_peer_weight = 1
 
 peer_networks_ipsec_policy = {
@@ -15,3 +16,9 @@ peer_networks_ipsec_policy = {
     "sa_datasize"       = 102400000
     "sa_lifetime"       = 3600
   }
+
+
+#####Networking#########
+network_address_space   = [ "10.101.0.0/16" ]
+subnet_prefix           = [ "10.101.1.0/24" ]
+transport_subnet_prefix = [ "10.101.0.0/24" ]
