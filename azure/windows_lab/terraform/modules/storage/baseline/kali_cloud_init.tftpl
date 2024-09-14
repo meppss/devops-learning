@@ -1,0 +1,52 @@
+#cloud-config
+
+# Set default user password
+# password: ${ADMIN_PASS}
+# Runs apt update
+package_update: true 
+# Runs apt upgrade
+package_upgrade: true
+packages:
+  - cifs-utils
+  - xorg
+  - xrdp
+  - xorgxrdp
+  - kali-desktop-xfce
+write_files:
+  - owner: root:root
+    path: /home/kali/fileshare_mount.sh
+    permissions: '0755'
+    content: |
+      sudo mkdir /mnt/${FILESHARE_NAME}
+      if [ ! -d "/etc/smbcredentials" ]; then
+          sudo mkdir /etc/smbcredentials
+      fi
+      if [ ! -f "/etc/smbcredentials/${SA_NAME}.cred" ]; then
+          sudo bash -c 'echo "username=${SA_NAME}" >> /etc/smbcredentials/${SA_NAME}.cred'
+          sudo bash -c 'echo "password=${SA_ACCESS_KEY}" >> /etc/smbcredentials/${SA_NAME}.cred'
+      fi
+      sudo chmod 600 /etc/smbcredentials/${SA_NAME}.cred
+
+      sudo bash -c 'echo "//${SA_NAME}.privatelink.file.core.windows.net/${FILESHARE_NAME} /mnt/${FILESHARE_NAME} cifs nofail,credentials=/etc/smbcredentials/${SA_NAME}.cred,dir_mode=0777,file_mode=0777,serverino,nosharesock,actimeo=30" >> /etc/fstab'
+      sudo mount -t cifs //${SA_NAME}.privatelink.file.core.windows.net/${FILESHARE_NAME} /mnt/${FILESHARE_NAME} -o credentials=/etc/smbcredentials/${SA_NAME}.cred,dir_mode=0777,file_mode=0777,serverino,nosharesock,actimeo=30
+  - owner: root:root
+    path: /home/kali/enable_rdp.sh
+    permissions: '0755'
+    content: |
+      export DEBIAN_FRONTEND=noninteractive
+      export NEEDRESTART_MODE=a
+      sudo apt install xrdp xorg kali-desktop-xfce -y
+      sudo adduser xrdp ssl-cert  
+      sudo systemctl start xrdp
+      sudo systemctl enable xrdp
+runcmd:
+  - cd /home/kali
+  - chown kali:kali /home/kali/enable_rdp.sh
+  - chown kali:kali /home/kali/fileshare_mount.sh
+  - touch ~/.xsession
+  - chmod +x ~/.xsession
+  - echo "kali-desktop-xfce" > ~/.xsession
+  - echo kali:kali | sudo chpasswd
+  - echo "deb http://http.kali.org/kali kali-last-snapshot main contrib non-free" | sudo tee /etc/apt/sources.list
+  - apt update
+  - sh fileshare_mount.sh
